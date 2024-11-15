@@ -51,4 +51,3 @@ This project uses [Husky](https://typicode.github.io/husky) to run git hooks. Th
 
 This project uses [commitlint](https://commitlint.js.org/#/) to ensure that commit messages follow the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) specification.
 Check out `commitlint.config.js` for the configuration.
-# Code-Doctors-HRM-Frontend
