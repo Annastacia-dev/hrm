@@ -4,4 +4,6 @@ export interface SidebarItemProps {
   nestedItems?: SidebarItemProps[];
   isOpen?: boolean;
   link?: string;
+  className?: string;
+  onClick?: () => void;
 }

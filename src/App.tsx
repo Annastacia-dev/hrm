@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Employees from './components/employee/Employees';
 import Employee from './components/employee/Employee';
 import Error from './components/Error';
+import Attendances from './components/attendance/Attendances';
 
 function AppContent() {
   return (
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
       {
         path: 'employees/:id',
         element: <Employee />,
+      },
+      {
+        path: 'attendance',
+        element: <Attendances />,
       },
       {
         path: '*',

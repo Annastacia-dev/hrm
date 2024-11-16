@@ -60,6 +60,8 @@ const SidebarItem = ({
   link,
   nestedItems,
   isOpen,
+  className,
+  onClick,
 }: SidebarItemProps) => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const nested = nestedItems && nestedItems.length > 0;
@@ -68,8 +70,14 @@ const SidebarItem = ({
     <div className="relative">
       <a
         href={link}
-        className="flex items-center gap-3 py-2 px-4 cursor-pointer"
-        onClick={() => nested && setIsSubmenuOpen(!isSubmenuOpen)}
+        className={`flex items-center gap-3 py-2 px-4 cursor-pointer ${className}`}
+        onClick={() => {
+          if (nested) {
+            setIsSubmenuOpen(!isSubmenuOpen);
+          }
+          if (onClick) onClick();
+        }}
+        title={text}
       >
         {icon}
         {isOpen && <span className="min-w-[100px]">{text}</span>}
