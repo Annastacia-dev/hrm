@@ -16,7 +16,7 @@ const SidebarLinks = () => {
       icon: <Clock size={18} />,
       text: 'Attendance',
       link: '/attendance',
-    }
+    },
   ];
 
   const adminLinks: SidebarItemProps[] = [];

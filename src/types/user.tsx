@@ -2,6 +2,7 @@ import { CompanyEquipment } from './company-equipment';
 import { SalaryDetails } from './salary-details';
 import { Certifications } from './certifications';
 import { PersonalDocuments } from './personal-documents';
+import { Attendance } from './attendance';
 
 export type User = {
   first_name: string;
@@ -25,6 +26,7 @@ export type User = {
   salary_details: SalaryDetails[];
   certifications: Certifications[];
   personal_documents: PersonalDocuments[];
+  attendances?: Attendance[];
 };
 
 export const UserDefaults = {
