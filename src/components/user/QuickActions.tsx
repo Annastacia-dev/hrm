@@ -21,7 +21,7 @@ export default function QuickActions() {
   };
 
   return (
-    <>
+    <div className='md:flex hidden'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size="sm">
@@ -50,6 +50,6 @@ export default function QuickActions() {
           <DrawerContent>{action.drawerContent}</DrawerContent>
         </Drawer>
       ))}
-    </>
+    </div>
   );
 }

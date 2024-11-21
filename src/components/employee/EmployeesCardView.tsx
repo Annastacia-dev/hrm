@@ -175,7 +175,7 @@ const EmployeesCardView = ({
                     {employee.role}
                   </span>
                 </div>
-                <div className="grid grid-cols-2 gap-4 mt-4">
+                <div className="grid md:grid-cols-2 gap-4 mt-4">
                   <p className="flex flex-col gap-1 capitalize">
                     <span className="text-sm text-gray-500">
                       Employment Status
@@ -190,13 +190,13 @@ const EmployeesCardView = ({
                       {new Date(employee.date_of_joining).toLocaleDateString()}
                     </span>
                   </p>
-                  <div className="flex flex-col lg:flex-row lg:justify-between items-center lg:gap-2 gap-3 mt-4  ">
+                  <div className="flex flex-col lg:justify-between lg:gap-2 gap-3 mt-4 lg:text-base text-xs  ">
                     <a
                       href={`mailto:${employee.email}`}
                       target="_blank"
                       rel="noreferrer"
                       onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-2 lg:ml-0 ml-16"
+                      className="flex items-center gap-2 lg:ml-20 "
                     >
                       <Send className="w-4 h-4" />
                       <span>{employee.email}</span>

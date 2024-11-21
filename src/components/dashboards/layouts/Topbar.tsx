@@ -1,7 +1,7 @@
 import AvatarDetails from '@/components/user/Avatar';
 import TopSearchBar from '@/components/common/TopSearchBar';
 import QuickActions from '@/components/user/QuickActions';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Bell } from 'lucide-react';
 import { useTheme } from '@/contexts/theme-provider';
 import { Button } from '@/components/ui/button';
 
@@ -15,6 +15,9 @@ const Topbar = ({ isSidebarOpen }: { isSidebarOpen: boolean }) => {
       <QuickActions />
       <div className="flex items-center lg:gap-4 gap-2">
         <TopSearchBar onSearch={() => {}} />
+        <Button variant="ghost">
+          <Bell />
+        </Button>
         <Button
           variant="ghost"
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}

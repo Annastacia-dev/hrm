@@ -1,13 +1,14 @@
+import { useContext } from 'react';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { Toaster } from './components/ui/toaster';
+import UserContext from './contexts/user';
 import LoginPage from './components/auth/LogIn';
 import DashboardLayout from './components/dashboards/layouts/DashboardLayout';
-import UserContext from './contexts/user';
-import { useContext } from 'react';
-import { Toaster } from './components/ui/toaster';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Employees from './components/employee/Employees';
 import Employee from './components/employee/Employee';
-import Error from './components/Error';
 import Attendances from './components/attendance/Attendances';
+import AdminDashboard from './components/dashboards/AdminDashboard';
+import Error from './components/Error';
 
 function AppContent() {
   return (
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
     element: <AppContent />,
     children: [
       {
+        path: '/', // Root path renders AdminDashboard
+        element: <AdminDashboard />,
+      },
+      {
         path: 'employees',
         element: <Employees />,
       },
@@ -35,7 +40,7 @@ const router = createBrowserRouter([
         element: <Attendances />,
       },
       {
-        path: '*',
+        path: '*', // Catch-all for unmatched routes
         element: <Error />,
       },
     ],
