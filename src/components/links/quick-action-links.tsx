@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import UserContext from '@/contexts/user';
 import { QuickActionItemProps } from '@/interfaces/quick-action-item';
-import { PlusIcon } from 'lucide-react';
+import { PlusIcon, FileText, Calendar } from 'lucide-react';
 import NewEmployee from '@/components/employee/NewEmployeeDrawer';
 
 const QuickActionLinks = () => {
@@ -13,9 +13,19 @@ const QuickActionLinks = () => {
 
   const managerLinks: QuickActionItemProps[] = [
     {
-      label: 'Add employee',
+      label: 'Add Employee',
       icon: <PlusIcon />,
       drawerContent: <NewEmployee />,
+    },
+    {
+      label: 'Generate Report',
+      icon: <FileText />,
+      drawerContent: '',
+    },
+    {
+      label: 'Schedule a Review',
+      icon: <Calendar />,
+      drawerContent: '',
     },
   ];
 

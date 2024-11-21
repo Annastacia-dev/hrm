@@ -55,7 +55,7 @@ export default function LoginPage() {
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black opacity-70"></div>
-      <Card className="w-full max-w-md z-10 mt-20">
+      <Card className="w-full max-w-md z-10 lg:mt-20">
         <CardHeader className="space-y-1">
           <img src={logo} alt="Zuri Health Logo" className="w-20" />
           <CardTitle className="text-2xl font-bold text-center">

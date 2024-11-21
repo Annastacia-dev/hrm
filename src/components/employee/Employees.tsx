@@ -1,162 +1,198 @@
-import { users } from '@/data/users';
-import { Button } from '@/components/ui/button';
-import BreadcrumbComponent from '@/components/BreadcrumbComponent';
-import { useContext, useState } from 'react';
-import UserContext from '@/contexts/user';
-import { IdCard, Grid3x3, Plus } from 'lucide-react';
-import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
-import NewEmployeeDrawer from './NewEmployeeDrawer';
-import { toast } from '@/hooks/use-toast';
-import EmployeesTableView from './EmployeesTableView';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import EmployeesCardView from './EmployeesCardView';
+"use client"
 
-const Employees = () => {
-  const { currentUser } = useContext(UserContext);
+import { useState, useContext, useCallback } from 'react'
+import { Plus, Search, Grid3x3, LayoutList } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
+import {
+  Drawer,
+  DrawerContent,
+  DrawerTrigger,
+} from "@/components/ui/drawer"
+import { toast } from "@/hooks/use-toast"
+import { users } from '@/data/users'
+import UserContext from '@/contexts/user'
+import NewEmployeeDrawer from './NewEmployeeDrawer'
+import EmployeesTableView from './EmployeesTableView'
+import EmployeesCardView from './EmployeesCardView'
+
+export default function EmployeesComponent() {
+  const { currentUser } = useContext(UserContext)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [departmentFilter, setDepartmentFilter] = useState("")
   const [view, setView] = useState<'table' | 'card'>(
     () => (localStorage.getItem('employeesView') as 'table' | 'card') || 'card'
-  );
-  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
+  )
+  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null)
   const [employeeList, setEmployeeList] = useState(
     currentUser?.role === 'admin'
       ? users
       : currentUser?.role === 'manager'
-        ? users.filter((user) => user.role != 'manager' && user.role != 'admin')
+        ? users.filter((user) => user.role !== 'manager' && user.role !== 'admin')
         : []
-  );
+  )
 
-  const toggleView = () => {
-    const newView = view === 'table' ? 'card' : 'table';
-    setView(newView);
-    localStorage.setItem('employeesView', newView);
-  };
+  const toggleView = useCallback(() => {
+    const newView = view === 'table' ? 'card' : 'table'
+    setView(newView)
+    localStorage.setItem('employeesView', newView)
+  }, [view])
 
-  const handleDelete = (idNumber: string | null) => {
-    if (!idNumber) return;
-    const employee = employeeList.find((e) => e.id_number === idNumber);
-    if (!employee) return;
+  const handleDelete = useCallback((idNumber: string | null) => {
+    if (!idNumber) return
+    const employee = employeeList.find((e) => e.id_number === idNumber)
+    if (!employee) return
 
     setEmployeeList((prevEmployees) =>
       prevEmployees.filter((employee) => employee.id_number !== idNumber)
-    );
+    )
     toast({
       title: `${employee.first_name} ${employee.last_name} deleted`,
       description: `Employee has been deleted successfully`,
-    });
-  };
+    })
+  }, [employeeList])
 
-  const activeEmployees = employeeList.filter((employee) => employee.active);
-  const inactiveEmployees = employeeList.filter((employee) => !employee.active);
-
-  const handleInactivate = (idNumber: string | null) => {
-    if (!idNumber) return;
-    const employee = employeeList.find((e) => e.id_number === idNumber);
-    if (!employee) return;
-    employee.active = false;
-    setEmployeeList([...employeeList]);
+  const handleInactivate = useCallback((idNumber: string | null) => {
+    if (!idNumber) return
+    const employee = employeeList.find((e) => e.id_number === idNumber)
+    if (!employee) return
+    employee.active = false
+    setEmployeeList([...employeeList])
     toast({
       title: `${employee.first_name} ${employee.last_name} inactivated`,
       description: `Employee has been inactivated successfully`,
-    });
-  };
+    })
+  }, [employeeList])
 
-  const handleActivate = (idNumber: string | null) => {
-    if (!idNumber) return;
-    const employee = employeeList.find((e) => e.id_number === idNumber);
-    if (!employee) return;
-    employee.active = true;
-    setEmployeeList([...employeeList]);
+  const handleActivate = useCallback((idNumber: string | null) => {
+    if (!idNumber) return
+    const employee = employeeList.find((e) => e.id_number === idNumber)
+    if (!employee) return
+    employee.active = true
+    setEmployeeList([...employeeList])
     toast({
       title: `${employee.first_name} ${employee.last_name} activated`,
       description: `Employee has been activated successfully`,
-    });
-  };
+    })
+  }, [employeeList])
+
+  const filteredEmployees = employeeList.filter(employee => 
+    (employee.first_name.toLowerCase() + ' ' + employee.last_name.toLowerCase()).includes(searchQuery.toLowerCase()) &&
+    (departmentFilter === "" || employee.department === departmentFilter)
+  )
+
+  const activeEmployees = filteredEmployees.filter((employee) => employee.active)
+  const inactiveEmployees = filteredEmployees.filter((employee) => !employee.active)
 
   return (
-    <div className="flex flex-col gap-6 text-sm overflow-hidden">
-      <BreadcrumbComponent
-        items={[
-          { name: 'Home', href: '/' },
-          { name: 'Employees', href: '/employees' },
-        ]}
-      />
-
-      <div className="flex lg:flex-row flex-col lg:items-center items-start justify-between gap-4">
-        <h5 className="font-bold text-lg capitalize text-primaryPink">
-          Employees({employeeList.length})
-        </h5>
-        <div className="flex items-center gap-2">
+    <Card>
+      <CardHeader className="flex lg:flex-row flex-col lg:items-center justify-between lg:space-y-0 space-y-4  pb-2">
+        <CardTitle>Employees</CardTitle>
+        <div className="flex items-center space-x-2">
           <Drawer>
             <DrawerTrigger asChild>
-              <Button variant="secondary">
-                <Plus />
-                <span>New Employee</span>
+              <Button variant="outline">
+                <Plus className="mr-2 h-4 w-4" />
+                New Employee
               </Button>
             </DrawerTrigger>
             <DrawerContent>
               <NewEmployeeDrawer />
             </DrawerContent>
           </Drawer>
-          <Button variant="outline" size="lg" onClick={toggleView}>
-            {view === 'table' ? <IdCard size={24} /> : <Grid3x3 size={24} />}
+          <Button variant="outline" size="icon" onClick={toggleView}>
+            {view === 'table' ? <Grid3x3 className="h-4 w-4" /> : <LayoutList className="h-4 w-4" />}
           </Button>
         </div>
-      </div>
-
-      <Tabs defaultValue="active" className="">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="active">
-            Active({activeEmployees.length})
-          </TabsTrigger>
-          <TabsTrigger value="inactive">
-            Inactive({inactiveEmployees.length})
-          </TabsTrigger>
-        </TabsList>
-        <TabsContent value="active">
-          {view === 'table' ? (
-            <EmployeesTableView
-              employeeList={activeEmployees}
-              openEditDrawer={openEditDrawer}
-              setOpenEditDrawer={setOpenEditDrawer}
-              handleDelete={handleDelete}
-              handleInactivate={handleInactivate}
-              handleActivate={handleActivate}
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col md:flex-row justify-between mb-4 space-y-2 md:space-y-0 md:space-x-2">
+          <div className="relative">
+            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search employees"
+              className="pl-8 w-full md:w-[300px]"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-          ) : (
-            <EmployeesCardView
-              employeeList={activeEmployees}
-              openEditDrawer={openEditDrawer}
-              setOpenEditDrawer={setOpenEditDrawer}
-              handleDelete={handleDelete}
-              handleInactivate={handleInactivate}
-              handleActivate={handleActivate}
-            />
-          )}
-        </TabsContent>
-        <TabsContent value="inactive">
-          {view === 'table' ? (
-            <EmployeesTableView
-              employeeList={inactiveEmployees}
-              openEditDrawer={openEditDrawer}
-              setOpenEditDrawer={setOpenEditDrawer}
-              handleDelete={handleDelete}
-              handleInactivate={handleInactivate}
-              handleActivate={handleActivate}
-            />
-          ) : (
-            <EmployeesCardView
-              employeeList={inactiveEmployees}
-              openEditDrawer={openEditDrawer}
-              setOpenEditDrawer={setOpenEditDrawer}
-              handleDelete={handleDelete}
-              handleInactivate={handleInactivate}
-              handleActivate={handleActivate}
-            />
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-};
-
-export default Employees;
+          </div>
+          <Select value={departmentFilter} onValueChange={setDepartmentFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Department" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Departments</SelectItem>
+              <SelectItem value="Engineering">Engineering</SelectItem>
+              <SelectItem value="Marketing">Marketing</SelectItem>
+              <SelectItem value="Sales">Sales</SelectItem>
+              <SelectItem value="HR">HR</SelectItem>
+              <SelectItem value="Finance">Finance</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <Tabs defaultValue="active" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="active">Active ({activeEmployees.length})</TabsTrigger>
+            <TabsTrigger value="inactive">Inactive ({inactiveEmployees.length})</TabsTrigger>
+          </TabsList>
+          <TabsContent value="active">
+            {view === 'table' ? (
+              <EmployeesTableView
+                employeeList={activeEmployees}
+                openEditDrawer={openEditDrawer}
+                setOpenEditDrawer={setOpenEditDrawer}
+                handleDelete={handleDelete}
+                handleInactivate={handleInactivate}
+                handleActivate={handleActivate}
+              />
+            ) : (
+              <EmployeesCardView
+                employeeList={activeEmployees}
+                openEditDrawer={openEditDrawer}
+                setOpenEditDrawer={setOpenEditDrawer}
+                handleDelete={handleDelete}
+                handleInactivate={handleInactivate}
+                handleActivate={handleActivate}
+              />
+            )}
+          </TabsContent>
+          <TabsContent value="inactive">
+            {view === 'table' ? (
+              <EmployeesTableView
+                employeeList={inactiveEmployees}
+                openEditDrawer={openEditDrawer}
+                setOpenEditDrawer={setOpenEditDrawer}
+                handleDelete={handleDelete}
+                handleInactivate={handleInactivate}
+                handleActivate={handleActivate}
+              />
+            ) : (
+              <EmployeesCardView
+                employeeList={inactiveEmployees}
+                openEditDrawer={openEditDrawer}
+                setOpenEditDrawer={setOpenEditDrawer}
+                handleDelete={handleDelete}
+                handleInactivate={handleInactivate}
+                handleActivate={handleActivate}
+              />
+            )}
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  )
+}
