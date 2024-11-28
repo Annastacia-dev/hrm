@@ -1,102 +1,113 @@
-"use client"
+'use client';
 
-import { useState, useContext, useCallback } from 'react'
-import { Plus, Search, Grid3x3, LayoutList } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { useState, useContext, useCallback } from 'react';
+import { Plus, Search, Grid3x3, LayoutList } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
-import {
-  Drawer,
-  DrawerContent,
-  DrawerTrigger,
-} from "@/components/ui/drawer"
-import { toast } from "@/hooks/use-toast"
-import { users } from '@/data/users'
-import UserContext from '@/contexts/user'
-import NewEmployeeDrawer from './NewEmployeeDrawer'
-import EmployeesTableView from './EmployeesTableView'
-import EmployeesCardView from './EmployeesCardView'
+} from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
+import { toast } from '@/hooks/use-toast';
+import { users } from '@/data/users';
+import UserContext from '@/contexts/user';
+import NewEmployeeDrawer from './NewEmployeeDrawer';
+import EmployeesTableView from './EmployeesTableView';
+import EmployeesCardView from './EmployeesCardView';
 
 export default function EmployeesComponent() {
-  const { currentUser } = useContext(UserContext)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [departmentFilter, setDepartmentFilter] = useState("")
+  const { currentUser } = useContext(UserContext);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [departmentFilter, setDepartmentFilter] = useState('');
   const [view, setView] = useState<'table' | 'card'>(
     () => (localStorage.getItem('employeesView') as 'table' | 'card') || 'card'
-  )
-  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null)
+  );
+  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
   const [employeeList, setEmployeeList] = useState(
     currentUser?.role === 'admin'
       ? users
       : currentUser?.role === 'manager'
-        ? users.filter((user) => user.role !== 'manager' && user.role !== 'admin')
+        ? users.filter(
+            (user) => user.role !== 'manager' && user.role !== 'admin'
+          )
         : []
-  )
+  );
 
   const toggleView = useCallback(() => {
-    const newView = view === 'table' ? 'card' : 'table'
-    setView(newView)
-    localStorage.setItem('employeesView', newView)
-  }, [view])
+    const newView = view === 'table' ? 'card' : 'table';
+    setView(newView);
+    localStorage.setItem('employeesView', newView);
+  }, [view]);
 
-  const handleDelete = useCallback((idNumber: string | null) => {
-    if (!idNumber) return
-    const employee = employeeList.find((e) => e.id_number === idNumber)
-    if (!employee) return
+  const handleDelete = useCallback(
+    (idNumber: string | null) => {
+      if (!idNumber) return;
+      const employee = employeeList.find((e) => e.id_number === idNumber);
+      if (!employee) return;
 
-    setEmployeeList((prevEmployees) =>
-      prevEmployees.filter((employee) => employee.id_number !== idNumber)
-    )
-    toast({
-      title: `${employee.first_name} ${employee.last_name} deleted`,
-      description: `Employee has been deleted successfully`,
-    })
-  }, [employeeList])
+      setEmployeeList((prevEmployees) =>
+        prevEmployees.filter((employee) => employee.id_number !== idNumber)
+      );
+      toast({
+        title: `${employee.first_name} ${employee.last_name} deleted`,
+        description: `Employee has been deleted successfully`,
+      });
+    },
+    [employeeList]
+  );
 
-  const handleInactivate = useCallback((idNumber: string | null) => {
-    if (!idNumber) return
-    const employee = employeeList.find((e) => e.id_number === idNumber)
-    if (!employee) return
-    employee.active = false
-    setEmployeeList([...employeeList])
-    toast({
-      title: `${employee.first_name} ${employee.last_name} inactivated`,
-      description: `Employee has been inactivated successfully`,
-    })
-  }, [employeeList])
+  const handleInactivate = useCallback(
+    (idNumber: string | null) => {
+      if (!idNumber) return;
+      const employee = employeeList.find((e) => e.id_number === idNumber);
+      if (!employee) return;
+      employee.active = false;
+      setEmployeeList([...employeeList]);
+      toast({
+        title: `${employee.first_name} ${employee.last_name} inactivated`,
+        description: `Employee has been inactivated successfully`,
+      });
+    },
+    [employeeList]
+  );
 
-  const handleActivate = useCallback((idNumber: string | null) => {
-    if (!idNumber) return
-    const employee = employeeList.find((e) => e.id_number === idNumber)
-    if (!employee) return
-    employee.active = true
-    setEmployeeList([...employeeList])
-    toast({
-      title: `${employee.first_name} ${employee.last_name} activated`,
-      description: `Employee has been activated successfully`,
-    })
-  }, [employeeList])
+  const handleActivate = useCallback(
+    (idNumber: string | null) => {
+      if (!idNumber) return;
+      const employee = employeeList.find((e) => e.id_number === idNumber);
+      if (!employee) return;
+      employee.active = true;
+      setEmployeeList([...employeeList]);
+      toast({
+        title: `${employee.first_name} ${employee.last_name} activated`,
+        description: `Employee has been activated successfully`,
+      });
+    },
+    [employeeList]
+  );
 
-  const filteredEmployees = employeeList.filter(employee => 
-    (employee.first_name.toLowerCase() + ' ' + employee.last_name.toLowerCase()).includes(searchQuery.toLowerCase()) &&
-    (departmentFilter === "" || employee.department === departmentFilter)
-  )
+  const filteredEmployees = employeeList.filter(
+    (employee) =>
+      (
+        employee.first_name.toLowerCase() +
+        ' ' +
+        employee.last_name.toLowerCase()
+      ).includes(searchQuery.toLowerCase()) &&
+      (departmentFilter === '' || employee.department === departmentFilter)
+  );
 
-  const activeEmployees = filteredEmployees.filter((employee) => employee.active)
-  const inactiveEmployees = filteredEmployees.filter((employee) => !employee.active)
+  const activeEmployees = filteredEmployees.filter(
+    (employee) => employee.active
+  );
+  const inactiveEmployees = filteredEmployees.filter(
+    (employee) => !employee.active
+  );
 
   return (
     <Card>
@@ -115,7 +126,11 @@ export default function EmployeesComponent() {
             </DrawerContent>
           </Drawer>
           <Button variant="outline" size="icon" onClick={toggleView}>
-            {view === 'table' ? <Grid3x3 className="h-4 w-4" /> : <LayoutList className="h-4 w-4" />}
+            {view === 'table' ? (
+              <Grid3x3 className="h-4 w-4" />
+            ) : (
+              <LayoutList className="h-4 w-4" />
+            )}
           </Button>
         </div>
       </CardHeader>
@@ -146,8 +161,12 @@ export default function EmployeesComponent() {
         </div>
         <Tabs defaultValue="active" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="active">Active ({activeEmployees.length})</TabsTrigger>
-            <TabsTrigger value="inactive">Inactive ({inactiveEmployees.length})</TabsTrigger>
+            <TabsTrigger value="active">
+              Active ({activeEmployees.length})
+            </TabsTrigger>
+            <TabsTrigger value="inactive">
+              Inactive ({inactiveEmployees.length})
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="active">
             {view === 'table' ? (
@@ -194,5 +213,5 @@ export default function EmployeesComponent() {
         </Tabs>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -21,7 +21,7 @@ export default function QuickActions() {
   };
 
   return (
-    <div className='md:flex hidden'>
+    <div className="md:flex hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size="sm">
