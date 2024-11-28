@@ -1,5 +1,3 @@
-'use client';
-
 import { useState, useContext } from 'react';
 import UserContext from '@/contexts/user';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
