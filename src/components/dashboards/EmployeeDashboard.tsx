@@ -74,6 +74,13 @@ export default function EmployeeDashboard() {
     console.log('Leave request submitted');
   };
 
+  const formatTime = (date: Date) => {
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
   const today = new Date().toISOString().split('T')[0];
   const todayAttendance = currentUser?.attendances?.find(
     (attendance) => attendance.date === today
@@ -101,15 +108,15 @@ export default function EmployeeDashboard() {
                 })}
               </p>
               <div className="space-x-2">
-                {!todayAttendance?.clock_in_time ? (
+                {!todayAttendance?.checkIn ? (
                   <Button onClick={() => openTimePicker('checkIn')}>
                     Check In
                   </Button>
                 ) : (
-                  <span>Checked in at: {todayAttendance.clock_in_time}</span>
+                  <span>Checked in at: {formatTime(todayAttendance.checkIn as Date)}</span>
                 )}
-                {todayAttendance?.clock_in_time &&
-                  !todayAttendance?.clock_out_time && (
+                {todayAttendance?.checkIn &&
+                  !todayAttendance?.checkOut && (
                     <Button
                       variant="secondary"
                       onClick={() => openTimePicker('checkOut')}
@@ -117,8 +124,10 @@ export default function EmployeeDashboard() {
                       Check Out
                     </Button>
                   )}
-                {todayAttendance?.clock_out_time && (
-                  <span>Checked out at: {todayAttendance.clock_out_time}</span>
+                {todayAttendance?.checkOut && (
+                    <span>
+                    Checked out at: {formatTime(todayAttendance.checkOut as Date)}
+                  </span>
                 )}
               </div>
             </div>

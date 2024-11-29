@@ -1,19 +1,10 @@
 import { addDays, setHours, setMinutes } from 'date-fns';
+import { Attendance } from '../types/attendance';
 
-export interface AttendanceRecord {
-  id: number;
-  date: Date;
-  status: 'present' | 'late' | 'absent';
-  checkIn: Date | null;
-  checkOut: Date | null;
-  hours: number;
-  notes: string;
-}
-
-const generateSampleData = (): AttendanceRecord[] => {
+const generateSampleData = (): Attendance[] => {
   const startDate = new Date(2024, 0, 1); // Start from January 1, 2024
   const endDate = new Date(); // Current date
-  const data: AttendanceRecord[] = [];
+  const data: Attendance[] = [];
   let id = 1;
 
   for (let date = startDate; date <= endDate; date = addDays(date, 1)) {
@@ -64,7 +55,7 @@ const generateSampleData = (): AttendanceRecord[] => {
 
     data.push({
       id: id++,
-      date: new Date(date),
+      date: date.toISOString(),
       status,
       checkIn,
       checkOut,

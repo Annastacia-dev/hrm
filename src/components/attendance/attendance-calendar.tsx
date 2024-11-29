@@ -13,7 +13,7 @@ import { Attendance } from '@/types/attendance';
 interface AttendanceCalendarProps {
   attendanceData: Attendance[];
   currentDate: Date;
-  onSelectDate: (date: Date) => void;
+  onSelectDate: (_date: Date) => void;
 }
 
 export function AttendanceCalendar({
@@ -65,7 +65,7 @@ export function AttendanceCalendar({
                     className={cn(
                       'relative h-9 w-9 p-0 font-normal aria-selected:opacity-100',
                       attendance && isSameMonth(date, currentDate)
-                        ? getStatusColor(attendance.status)
+                        ? getStatusColor(attendance.status || '')
                         : null
                     )}
                   >
@@ -78,7 +78,7 @@ export function AttendanceCalendar({
                   <TooltipContent>
                     <p>Date: {format(date, 'MMM dd, yyyy')}</p>
                     <p>Status: {attendance.status}</p>
-                    <p>Hours: {attendance.hours.toFixed(2)}</p>
+                    <p>Hours: {attendance.hours?.toFixed(2)}</p>
                     {attendance.notes && <p>Notes: {attendance.notes}</p>}
                   </TooltipContent>
                 )}

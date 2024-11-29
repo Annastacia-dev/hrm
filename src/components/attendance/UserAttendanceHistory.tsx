@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { format, startOfMonth, endOfMonth, isSameDay } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Table,
@@ -12,15 +12,16 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { sampleAttendanceData, AttendanceRecord } from '@/data/attendance';
+import { sampleAttendanceData } from '@/data/attendance';
 import { AttendanceCalendar } from './attendance-calendar';
 import { LeaveRequests } from './leave-request';
 import { AttendanceGraph } from './attendance-graph';
+import { Attendance } from '@/types/attendance';
 
 const UserAttendanceHistory = () => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [attendanceData] = useState<AttendanceRecord[]>(sampleAttendanceData);
+  const [attendanceData] = useState<Attendance[]>(sampleAttendanceData);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -53,7 +54,10 @@ const UserAttendanceHistory = () => {
           </CardHeader>
           <CardContent>
             <AttendanceCalendar
-              attendanceData={attendanceData}
+              attendanceData={attendanceData.map(record => ({
+                ...record,
+                date: format(record.date, 'yyyy-MM-dd')
+              }))}
               currentDate={currentDate}
               onSelectDate={setSelectedDate}
             />
@@ -81,10 +85,10 @@ const UserAttendanceHistory = () => {
             <TableBody>
               {getDailyAttendance(selectedDate).map((record) => (
                 <TableRow key={record.id}>
-                  <TableCell>{getStatusBadge(record.status)}</TableCell>
-                  <TableCell>{formatTime(record.checkIn)}</TableCell>
-                  <TableCell>{formatTime(record.checkOut)}</TableCell>
-                  <TableCell>{record.hours.toFixed(2)}</TableCell>
+                  <TableCell>{getStatusBadge(record.status || '')}</TableCell>
+                  <TableCell>{formatTime(record.checkIn as Date)}</TableCell>
+                  <TableCell>{formatTime(record.checkOut as Date)}</TableCell>
+                  <TableCell>{record.hours?.toFixed(2)}</TableCell>
                   <TableCell>{record.notes}</TableCell>
                 </TableRow>
               ))}
