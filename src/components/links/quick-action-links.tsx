@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import UserContext from '@/contexts/user';
 import { QuickActionItemProps } from '@/interfaces/quick-action-item';
 import { PlusIcon, FileText, Calendar } from 'lucide-react';
-import NewEmployee from '@/components/employee/NewEmployeeDrawer';
+import NewEmployee from '@/components/employee/employment/NewEmployeeDrawer';
 
 const QuickActionLinks = () => {
   const { currentUser } = useContext(UserContext);

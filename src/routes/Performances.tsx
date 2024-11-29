@@ -1,16 +1,16 @@
 import UserContext from '@/contexts/user';
 import { useContext } from 'react';
-import AdminAttendances from './AdminAttendances';
-import UserAttendanceHistory from './UserAttendanceHistory';
+import EmployeesPerformance from '@/components/admin/performances/EmployeesPerformance';
+import EmployeePerformance from '@/components/employee/performance/EmployeePerformance';
 
 const Attendances = () => {
   const { currentUser } = useContext(UserContext);
   return (
     <div>
       {currentUser?.role === 'admin' ? (
-        <AdminAttendances />
+        <EmployeesPerformance />
       ) : (
-        <UserAttendanceHistory />
+        <EmployeePerformance />
       )}
     </div>
   );

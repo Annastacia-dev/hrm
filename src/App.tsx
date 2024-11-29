@@ -4,11 +4,12 @@ import { Toaster } from './components/ui/toaster';
 import UserContext from './contexts/user';
 import LoginPage from './components/auth/LogIn';
 import DashboardLayout from './components/dashboards/layouts/DashboardLayout';
-import Employees from './components/employee/Employees';
-import Employee from './components/employee/Employee';
-import Attendances from './components/attendance/Attendances';
+import Employees from './components/admin/employees/Employees';
+import Employee from './components/employee/employment/Employee';
 import AdminDashboard from './components/dashboards/AdminDashboard';
 import EmployeeDashboard from './components/dashboards/EmployeeDashboard';
+import Attendances from './routes/Attendances';
+import Performances from './routes/Performances';
 import Error from './components/Error';
 
 function AppContent() {
@@ -45,6 +46,10 @@ function App() {
         {
           path: 'attendance',
           element: <Attendances />,
+        },
+        {
+          path: 'performance',
+          element: <Performances />,
         },
         {
           path: '*', // Catch-all for unmatched routes

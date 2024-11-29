@@ -15,7 +15,7 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { toast } from '@/hooks/use-toast';
 import { users } from '@/data/users';
 import UserContext from '@/contexts/user';
-import NewEmployeeDrawer from './NewEmployeeDrawer';
+import NewEmployeeDrawer from '../../employee/employment/NewEmployeeDrawer';
 import EmployeesTableView from './EmployeesTableView';
 import EmployeesCardView from './EmployeesCardView';
 
