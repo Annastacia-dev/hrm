@@ -27,6 +27,12 @@ export type User = {
   certifications: Certifications[];
   personal_documents: PersonalDocuments[];
   attendances?: Attendance[];
+  recentLeaveRequest?: {
+    type: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+  };
 };
 
 export const UserDefaults = {

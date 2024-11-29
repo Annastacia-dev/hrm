@@ -32,6 +32,7 @@ export default tseslint.config(
         { allowConstantExport: true },
       ],
       'no-unused-vars': [1, { args: 'after-used', argsIgnorePattern: '^_' }],
+      'react/prop-types': 'off',
     },
     settings: {
       react: {

@@ -1,4 +1,4 @@
-'use client';
+('');
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -21,7 +21,7 @@ export default function QuickActions() {
   };
 
   return (
-    <div className='md:flex hidden'>
+    <div className="md:flex hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button size="sm">
