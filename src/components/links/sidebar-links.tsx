@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import UserContext from '@/contexts/user';
 import { SidebarItemProps } from '@/interfaces/sidebar-items';
-import { Home, Users, Clock } from 'lucide-react';
+import { Home, Users, Clock, ChartNoAxesCombined } from 'lucide-react';
 
 const SidebarLinks = () => {
   const { currentUser } = useContext(UserContext);
@@ -16,6 +16,11 @@ const SidebarLinks = () => {
       icon: <Clock size={18} />,
       text: 'Attendance',
       link: '/attendance',
+    },
+    {
+      icon: <ChartNoAxesCombined size={18} />,
+      text: 'Performance',
+      link: '/performance',
     },
   ];
 

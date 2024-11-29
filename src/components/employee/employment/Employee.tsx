@@ -1,8 +1,8 @@
 import BreadcrumbComponent from '@/components/BreadcrumbComponent';
 import { useParams } from 'react-router-dom';
 import { users } from '@/data/users';
-import Error from '../Error';
-import { Card, CardHeader, CardTitle, CardDescription } from '../ui/card';
+import Error from '../../Error';
+import { Card, CardHeader, CardTitle, CardDescription } from '../../ui/card';
 import {
   Mail,
   Phone,
@@ -14,8 +14,8 @@ import {
   IdCard,
 } from 'lucide-react';
 import EditEmployeeDrawer from './EditEmployeeDrawer';
-import { Button } from '../ui/button';
-import { Drawer, DrawerContent, DrawerTrigger } from '../ui/drawer';
+import { Button } from '../../ui/button';
+import { Drawer, DrawerContent, DrawerTrigger } from '../../ui/drawer';
 import defaultProfile from '@/assets/default-profile.png';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap } from 'lucide-react';

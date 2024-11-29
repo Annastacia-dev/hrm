@@ -113,20 +113,22 @@ export default function EmployeeDashboard() {
                     Check In
                   </Button>
                 ) : (
-                  <span>Checked in at: {formatTime(todayAttendance.checkIn as Date)}</span>
+                  <span>
+                    Checked in at: {formatTime(todayAttendance.checkIn as Date)}
+                  </span>
                 )}
-                {todayAttendance?.checkIn &&
-                  !todayAttendance?.checkOut && (
-                    <Button
-                      variant="secondary"
-                      onClick={() => openTimePicker('checkOut')}
-                    >
-                      Check Out
-                    </Button>
-                  )}
+                {todayAttendance?.checkIn && !todayAttendance?.checkOut && (
+                  <Button
+                    variant="secondary"
+                    onClick={() => openTimePicker('checkOut')}
+                  >
+                    Check Out
+                  </Button>
+                )}
                 {todayAttendance?.checkOut && (
-                    <span>
-                    Checked out at: {formatTime(todayAttendance.checkOut as Date)}
+                  <span>
+                    Checked out at:{' '}
+                    {formatTime(todayAttendance.checkOut as Date)}
                   </span>
                 )}
               </div>

@@ -54,9 +54,9 @@ const UserAttendanceHistory = () => {
           </CardHeader>
           <CardContent>
             <AttendanceCalendar
-              attendanceData={attendanceData.map(record => ({
+              attendanceData={attendanceData.map((record) => ({
                 ...record,
-                date: format(record.date, 'yyyy-MM-dd')
+                date: format(record.date, 'yyyy-MM-dd'),
               }))}
               currentDate={currentDate}
               onSelectDate={setSelectedDate}
