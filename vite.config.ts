@@ -12,7 +12,8 @@ export default defineConfig({
         // Custom Workbox configuration if needed
         runtimeCaching: [
           {
-            urlPattern: /.(?:png|jpg|jpeg|svg|gif|webp|woff|woff2|eot|ttf|otf|json|css|js)$/,
+            urlPattern:
+              /.(?:png|jpg|jpeg|svg|gif|webp|woff|woff2|eot|ttf|otf|json|css|js)$/,
             handler: 'CacheFirst',
             options: {
               cacheName: 'assets',
@@ -25,7 +26,7 @@ export default defineConfig({
         ],
       },
       manifest: {
-        name: 'Zuri HRM System', 
+        name: 'Zuri HRM System',
         short_name: 'Zuri HRM',
         description: 'Human Resource Management System for Zuri Health',
         theme_color: '#ffffff',
