@@ -64,6 +64,7 @@ const EmployeesCardView = ({
                   <AvatarImage
                     src={employee.profile_picture}
                     alt={`${employee.first_name} ${employee.last_name}`}
+                    className="object-cover"
                   />
                   <AvatarFallback className="text-lg">
                     {employee.first_name[0]}
