@@ -27,6 +27,7 @@ export default function EmployeesComponent() {
     () => (localStorage.getItem('employeesView') as 'table' | 'card') || 'card'
   );
   const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
+
   const [employeeList, setEmployeeList] = useState(
     currentUser?.role === 'admin'
       ? users

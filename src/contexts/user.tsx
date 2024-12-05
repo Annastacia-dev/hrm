@@ -1,7 +1,7 @@
 // Create user context to keep track of current user
-
 import { User } from '@/types/user';
-import api from '@/utils/api';
+import { users } from '@/data/users';
+// import api from '@/utils/api';
 
 import { useState, createContext } from 'react';
 
@@ -38,21 +38,33 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
 
   // post as x-www-form-urlencoded
   // username: email, password: password
-  const login = (email: string, password: string) => {
-    const formData = new URLSearchParams();
-    formData.append('username', email);
-    formData.append('password', password);
+  // const login = (email: string, password: string) => {
+  //   const formData = new URLSearchParams();
+  //   formData.append('username', email);
+  //   formData.append('password', password);
 
-    api
-      .post('/login', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      })
-      .then((response) => {
-        console.log(response);
-        localStorage.setItem('zuri_token', response.access_token);
-      });
+  //   api
+  //     .post('/login', formData, {
+  //       headers: {
+  //         'Content-Type': 'application/x-www-form-urlencoded',
+  //       },
+  //     })
+  //     .then((response) => {
+  //       console.log(response);
+  //       localStorage.setItem('zuri_token', response.access_token);
+  //     });
+  // };
+
+  const login = (email: string, password: string) => {
+    const user = users.find(
+      (u) => u.email === email && u.password === password
+    );
+    if (user) {
+      setCurrentUser(user);
+      localStorage.setItem('user', JSON.stringify(user));
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
