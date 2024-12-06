@@ -58,11 +58,11 @@ const SidebarLinks = () => {
   const items =
     currentUser?.role === 'admin'
       ? [...commonLinks, ...adminLinks, ...managerLinks, ...financeLinks]
-      : currentUser?.role === 'manager'
+      : currentUser?.role.toLowerCase() === 'hr manager'
         ? [...commonLinks, ...managerLinks]
-        : currentUser?.role === 'finance'
+        : currentUser?.role.toLowerCase() === 'finance'
           ? [...commonLinks, ...financeLinks]
-          : currentUser?.role === 'employee'
+          : currentUser?.role.toLowerCase() === 'employee'
             ? [...commonLinks, ...employeeLinks]
             : [...commonLinks];
 

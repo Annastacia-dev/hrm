@@ -13,7 +13,6 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { toast } from '@/hooks/use-toast';
-import { users } from '@/data/users';
 import UserContext from '@/contexts/user';
 import NewEmployeeDrawer from '../../employee/employment/NewEmployeeDrawer';
 import EmployeesTableView from './EmployeesTableView';
@@ -24,6 +23,13 @@ import useEmployees from '@/data/employees';
 export default function EmployeesComponent() {
   const { currentUser } = useContext(UserContext);
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [departmentFilter, setDepartmentFilter] = useState('');
+  const [view, setView] = useState<'table' | 'card'>(
+    () => (localStorage.getItem('employeesView') as 'table' | 'card') || 'card'
+  );
+  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
+  const { employees, setEmployees, loading } = useEmployees();
 
   useEffect(() => {
     const role = currentUser?.role.toLowerCase();
@@ -35,19 +41,13 @@ export default function EmployeesComponent() {
       });
       navigate(-1);
       navigate('/');
+      return;
     }
   }, [currentUser, navigate]);
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [departmentFilter, setDepartmentFilter] = useState('');
-  const [view, setView] = useState<'table' | 'card'>(
-    () => (localStorage.getItem('employeesView') as 'table' | 'card') || 'card'
-  );
-  const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
-
-  const { employees, setEmployees, loading } = useEmployees();
-
-  console.log(employees);
+  if (!currentUser?.role || !['admin', 'hr manager'].includes(currentUser.role.toLowerCase())) {
+    return null;
+  }
 
   const [employeeList, setEmployeeList] = useState(
     currentUser?.role === 'admin'

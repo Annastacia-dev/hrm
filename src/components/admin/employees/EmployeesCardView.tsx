@@ -133,7 +133,7 @@ const EmployeesCardView = ({
 };
 
 type EmployeeActionsProps = {
-  employee: User;
+  employee: Employee;
   openEditDrawer: string | null;
   setOpenEditDrawer: (_id: string | null) => void;
   handleDelete: (_id: string | null) => void;

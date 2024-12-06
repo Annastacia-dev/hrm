@@ -88,7 +88,7 @@ export default function EmployeeDashboard() {
 
   return (
     <div className="space-y-6 p-6 bg-background">
-      <h1 className="text-3xl font-bold">
+      <h1 className="text-3xl font-bold capitalize">
         Welcome, {currentUser?.first_name}!
       </h1>
 
