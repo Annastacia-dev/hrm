@@ -1,19 +1,18 @@
 // Create user context to keep track of current user
 import { User } from '@/types/user';
-import { users } from '@/data/users';
-// import api from '@/utils/api';
+import api from '@/utils/api';
 
 import { useState, createContext } from 'react';
 
 const UserContext = createContext<{
   currentUser: User | null;
   setCurrentUser: React.Dispatch<React.SetStateAction<User | null>>;
-  login: (_email: string, _password: string) => boolean;
+  login: (_email: string, _password: string) => Promise<boolean>;
   logout: () => void;
 }>({
   currentUser: null,
   setCurrentUser: () => null,
-  login: () => false,
+  login: async () => false,
   logout: () => {},
 });
 
@@ -29,43 +28,30 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   });
 
-  // make a GET request to  /login which will return an access token that you will store in the local storage and use it to check the user
-  // useEffect(() => {
-  //   api.get('/login').then((response) => {
-  //     localStorage.setItem('accessToken', response.access_token);
-  //   });
-  // }, []);
 
-  // post as x-www-form-urlencoded
-  // username: email, password: password
-  // const login = (email: string, password: string) => {
-  //   const formData = new URLSearchParams();
-  //   formData.append('username', email);
-  //   formData.append('password', password);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    try {
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
 
-  //   api
-  //     .post('/login', formData, {
-  //       headers: {
-  //         'Content-Type': 'application/x-www-form-urlencoded',
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(response);
-  //       localStorage.setItem('zuri_token', response.access_token);
-  //     });
-  // };
+      const response = await api.post('/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
-  const login = (email: string, password: string) => {
-    const user = users.find(
-      (u) => u.email === email && u.password === password
-    );
-    if (user) {
-      setCurrentUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+      console.log(response);
+      
+      localStorage.setItem('zuri_token', response.data.access_token);
+      setCurrentUser(response.data.employee);
       return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
     }
-    return false;
   };
+
 
   const logout = () => {
     setCurrentUser(null);

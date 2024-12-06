@@ -24,20 +24,30 @@ export default function LoginPage() {
   const { login } = useContext(UserContext);
   const { toast } = useToast();
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    const success = login(email, password);
-    if (success) {
-      toast({
-        title: 'Login successful',
-        description: 'You have successfully logged in',
-        action: <ToastAction altText="Success">Dismiss</ToastAction>,
-      });
-    } else {
+    try {
+      const success = await login(email, password);
+      if (success) {
+        toast({
+          title: 'Login successful',
+          description: 'You have successfully logged in',
+          action: <ToastAction altText="Success">Dismiss</ToastAction>,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Login failed',
+          description: 'Invalid email or password',
+          action: <ToastAction altText="Try again">Try again</ToastAction>,
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
         variant: 'destructive',
         title: 'Login failed',
-        description: 'Invalid email or password',
+        description: 'An error occurred during login',
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
     }
