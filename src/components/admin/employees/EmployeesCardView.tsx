@@ -81,7 +81,9 @@ const EmployeesCardView = ({
                 />
               </div>
               <CardTitle className="mt-4 text-lg font-semibold flex items-center gap-2">
-                <span className='capitalize'>{employee.first_name} {employee.last_name}</span>
+                <span className="capitalize">
+                  {employee.first_name} {employee.last_name}
+                </span>
                 <p
                   className={`h-2 w-2 ${employee.active ? 'bg-green-300' : 'bg-gray-500'} rounded-full`}
                 ></p>
@@ -221,7 +223,7 @@ const EmployeeActions = ({
         }
       >
         <DrawerContent>
-          <EditEmployeeDrawer user={employee} />
+          <EditEmployeeDrawer employee={employee} />
         </DrawerContent>
       </Drawer>
     </div>

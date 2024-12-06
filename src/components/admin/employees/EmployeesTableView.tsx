@@ -64,7 +64,9 @@ const EmployeesTableView = ({
                     to={`/employees/${employee.id_number}`}
                     className="hover:underline hover:text-primary transition-colors duration-200"
                   >
-                    <span className='capitalize'>{employee.first_name} {employee.last_name}</span>
+                    <span className="capitalize">
+                      {employee.first_name} {employee.last_name}
+                    </span>
                   </Link>
                 </TableCell>
                 <TableCell>
@@ -145,7 +147,7 @@ const ActionButtons = ({
         </Button>
       </DrawerTrigger>
       <DrawerContent onClick={(e) => e.stopPropagation()}>
-        <EditEmployeeDrawer user={employee} />
+        <EditEmployeeDrawer employee={employee} />
       </DrawerContent>
     </Drawer>
     {employee.active ? (

@@ -28,7 +28,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   });
 
-
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
       const formData = new URLSearchParams();
@@ -40,7 +39,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-      
+
       localStorage.setItem('zuri_token', response.data.access_token);
       localStorage.setItem('user', JSON.stringify(response.data.employee));
       setCurrentUser(response.data.employee);
@@ -50,7 +49,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       return false;
     }
   };
-
 
   const logout = () => {
     setCurrentUser(null);
