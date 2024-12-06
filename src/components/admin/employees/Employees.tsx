@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback } from 'react';
+import { useState, useContext, useCallback, useEffect } from 'react';
 import { Plus, Search, Grid3x3, LayoutList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,9 +18,26 @@ import UserContext from '@/contexts/user';
 import NewEmployeeDrawer from '../../employee/employment/NewEmployeeDrawer';
 import EmployeesTableView from './EmployeesTableView';
 import EmployeesCardView from './EmployeesCardView';
+import { useNavigate } from 'react-router-dom';
+import useEmployees from '@/data/employees';
 
 export default function EmployeesComponent() {
   const { currentUser } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const role = currentUser?.role.toLowerCase();
+    if (role !== 'admin' && role !== 'hr manager') {
+      toast({
+        variant: 'destructive',
+        title: 'Access Denied',
+        description: 'You are not authorized to access this page'
+      });
+      navigate(-1);
+      navigate('/');
+    }
+  }, [currentUser, navigate]);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [departmentFilter, setDepartmentFilter] = useState('');
   const [view, setView] = useState<'table' | 'card'>(
@@ -28,12 +45,16 @@ export default function EmployeesComponent() {
   );
   const [openEditDrawer, setOpenEditDrawer] = useState<string | null>(null);
 
+  const { employees, setEmployees, loading } = useEmployees();
+
+  console.log(employees);
+
   const [employeeList, setEmployeeList] = useState(
     currentUser?.role === 'admin'
-      ? users
-      : currentUser?.role === 'manager'
-        ? users.filter(
-            (user) => user.role !== 'manager' && user.role !== 'admin'
+      ? employees
+      : currentUser?.role.toLowerCase() === 'hr manager'
+        ? employees.filter(
+            (employee) => employee.role !== 'hr manager' && employee.role !== 'admin'
           )
         : []
   );
@@ -101,12 +122,16 @@ export default function EmployeesComponent() {
       (departmentFilter === '' || employee.department === departmentFilter)
   );
 
-  const activeEmployees = filteredEmployees.filter(
+  const activeEmployees = filteredEmployees
+  .filter(
     (employee) => employee.active
   );
   const inactiveEmployees = filteredEmployees.filter(
     (employee) => !employee.active
   );
+
+  console.log(employeeList);
+
 
   return (
     <Card>
@@ -161,16 +186,16 @@ export default function EmployeesComponent() {
         <Tabs defaultValue="active" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="active">
-              Active ({activeEmployees.length})
+              Active ({employees.length})
             </TabsTrigger>
             <TabsTrigger value="inactive">
-              Inactive ({inactiveEmployees.length})
+              Inactive ({filteredEmployees.length})
             </TabsTrigger>
           </TabsList>
           <TabsContent value="active">
             {view === 'table' ? (
               <EmployeesTableView
-                employeeList={activeEmployees}
+                employeeList={employees}
                 openEditDrawer={openEditDrawer}
                 setOpenEditDrawer={setOpenEditDrawer}
                 handleDelete={handleDelete}
@@ -179,7 +204,7 @@ export default function EmployeesComponent() {
               />
             ) : (
               <EmployeesCardView
-                employeeList={activeEmployees}
+                employeeList={employees}
                 openEditDrawer={openEditDrawer}
                 setOpenEditDrawer={setOpenEditDrawer}
                 handleDelete={handleDelete}

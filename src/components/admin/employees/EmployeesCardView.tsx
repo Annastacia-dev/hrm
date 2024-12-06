@@ -31,10 +31,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { User } from '@/types/user';
+import { Employee } from '@/types/employee';
 
 type EmployeesCardViewProps = {
-  employeeList: User[];
+  employeeList: Employee[];
   openEditDrawer: string | null;
   setOpenEditDrawer: (_id: string | null) => void;
   handleDelete: (_id: string | null) => void;
@@ -81,13 +81,13 @@ const EmployeesCardView = ({
                 />
               </div>
               <CardTitle className="mt-4 text-lg font-semibold flex items-center gap-2">
-                {employee.first_name} {employee.last_name}
+                <span className='capitalize'>{employee.first_name} {employee.last_name}</span>
                 <p
                   className={`h-2 w-2 ${employee.active ? 'bg-green-300' : 'bg-gray-500'} rounded-full`}
                 ></p>
               </CardTitle>
-              <div className="text-sm text-muted-foreground">
-                {employee.job_title} - {employee.department}
+              <div className="text-sm text-muted-foreground capitalize">
+                {employee.job_role} - {employee.department_name}
               </div>
             </CardHeader>
           </Link>
@@ -97,9 +97,9 @@ const EmployeesCardView = ({
                 <Badge variant="outline" className="mr-2">
                   {employee.role}
                 </Badge>
-                <span className="text-muted-foreground">
+                <Badge className="text-white">
                   {employee.employment_status}
-                </span>
+                </Badge>
               </div>
               <div className="text-sm text-muted-foreground">
                 Hired: {new Date(employee.date_of_joining).toLocaleDateString()}
@@ -117,11 +117,11 @@ const EmployeesCardView = ({
               <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-muted-foreground" />
                 <a
-                  href={`tel:${employee.phone_number}`}
+                  href={`tel:${employee.phone}`}
                   className="text-sm hover:underline"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {employee.phone_number}
+                  {employee.phone}
                 </a>
               </div>
             </div>

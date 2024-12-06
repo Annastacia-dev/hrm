@@ -40,10 +40,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
       });
-
-      console.log(response);
       
       localStorage.setItem('zuri_token', response.data.access_token);
+      localStorage.setItem('user', JSON.stringify(response.data.employee));
       setCurrentUser(response.data.employee);
       return true;
     } catch (error) {

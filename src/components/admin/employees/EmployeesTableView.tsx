@@ -21,11 +21,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { User } from '@/types/user';
+import { Badge } from '@/components/ui/badge';
+import { Employee } from '@/types/employee';
 import EditEmployeeDrawer from '@/components/employee/employment/EditEmployeeDrawer';
 
 type EmployeesTableViewProps = {
-  employeeList: User[];
+  employeeList: Employee[];
   openEditDrawer: string | null;
   setOpenEditDrawer: (_id: string | null) => void;
   handleDelete: (_id: string | null) => void;
@@ -63,24 +64,26 @@ const EmployeesTableView = ({
                     to={`/employees/${employee.id_number}`}
                     className="hover:underline hover:text-primary transition-colors duration-200"
                   >
-                    {employee.first_name} {employee.last_name}
+                    <span className='capitalize'>{employee.first_name} {employee.last_name}</span>
                   </Link>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{employee.job_title}</span>
+                  <div className="flex flex-col capitalize">
+                    <span className="font-medium">{employee.job_role}</span>
                     <span className="text-sm text-muted-foreground">
-                      {employee.department}
+                      {employee.department_name}
                     </span>
                   </div>
                 </TableCell>
                 <TableCell className="capitalize">{employee.role}</TableCell>
-                <TableCell className="capitalize">
-                  {employee.employment_status}
+                <TableCell className="">
+                  <Badge className="text-white">
+                    {employee.employment_status}
+                  </Badge>
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-col gap-1">
-                    <span className="text-sm">{employee.phone_number}</span>
+                    <span className="text-sm">{employee.phone}</span>
                     <span className="text-sm text-muted-foreground">
                       {employee.email}
                     </span>

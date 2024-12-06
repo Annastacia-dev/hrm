@@ -11,17 +11,14 @@ const useEmployees = () => {
   useEffect(() => {
     api.get('/employees').then((response) => {
       if (response.status === 200) {
-        setEmployees(response.data);
+        setEmployees(response.data.employees);
         setLoading(false);
       } else {
         setLoading(false);
-        console.log(response);
         setError(response.data.detail);
       }
     });
   }, []);
-
-  console.log(employees, error);
 
   return { employees, setEmployees, loading };
 };
