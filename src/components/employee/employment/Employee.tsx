@@ -1,6 +1,6 @@
 import BreadcrumbComponent from '@/components/BreadcrumbComponent';
 import { useParams } from 'react-router-dom';
-import { users } from '@/data/users';
+import useEmployees from '@/data/employees';
 import Error from '../../Error';
 import { Card, CardHeader, CardTitle, CardDescription } from '../../ui/card';
 import {
@@ -19,10 +19,12 @@ import { Drawer, DrawerContent, DrawerTrigger } from '../../ui/drawer';
 import defaultProfile from '@/assets/default-profile.png';
 import { Badge } from '@/components/ui/badge';
 import { GraduationCap } from 'lucide-react';
+import type { Employee } from '@/types/employee';
 
 const Employee = () => {
   const { id } = useParams();
-  const employee = users.find((user) => user.id_number === id);
+  const { employees } = useEmployees();
+  const employee = employees.find((employee: Employee) => employee.id_number === id);
 
   if (!employee) {
     return <Error />;
@@ -72,7 +74,7 @@ const Employee = () => {
                     title="Department"
                   >
                     <Building className="w-4 h-4" />
-                    {employee.department}
+                    {employee.department_name}
                   </p>
                   <p
                     className="text-sm text-gray-500 flex items-center gap-2"
@@ -127,7 +129,7 @@ const Employee = () => {
                     </Button>
                   </DrawerTrigger>
                   <DrawerContent>
-                    <EditEmployeeDrawer user={employee} />
+                    <EditEmployeeDrawer employee={employee} />
                   </DrawerContent>
                 </Drawer>
 
@@ -143,10 +145,10 @@ const Employee = () => {
                       ></p>
                     </div>
                     <p className="text-sm text-gray-500 capitalize">
-                      {employee.job_title}
+                      {employee.job_role}
                     </p>
                     <p className="text-sm text-gray-500 capitalize">
-                      {employee.department}
+                      {employee.department_name}
                     </p>
                   </CardTitle>
                   <CardDescription className="flex flex-col gap-2 pt-10 space-y-1">
@@ -157,7 +159,7 @@ const Employee = () => {
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4" />
                       <p className="text-sm text-gray-500">
-                        {employee.phone_number}
+                        {employee.phone}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

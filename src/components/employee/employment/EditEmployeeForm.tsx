@@ -1,4 +1,4 @@
-import { User } from '@/types/user';
+import { Employee } from '@/types/employee';
 import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import {
@@ -32,7 +32,7 @@ import { z } from 'zod';
 import { cn } from '@/lib/utils';
 
 type Props = {
-  user: User;
+  employee: Employee;
 };
 
 const FormSchema = z.object({
@@ -61,21 +61,21 @@ const FormSchema = z.object({
   dateOfBirth: z.date(),
 });
 
-const EditEmployeeForm = ({ user }: Props) => {
+const EditEmployeeForm = ({ employee }: Props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      firstName: user.first_name,
-      middleName: user.middle_name,
-      lastName: user.last_name,
-      idNumber: user.id_number,
-      email: user.email,
-      phoneNumber: user.phone_number,
-      dateOfBirth: new Date(user.date_of_birth),
-      address: user.address,
-      role: user.role,
-      employmentStatus: user.employment_status,
-      dateOfJoining: new Date(user.date_of_joining),
+      firstName: employee.first_name,
+      middleName: employee.middle_name,
+      lastName: employee.last_name,
+      idNumber: employee.id_number,
+      email: employee.email,
+      phoneNumber: employee.phone,
+      dateOfBirth: new Date(employee.date_of_birth),
+      address: employee.address,
+      role: employee.role,
+      employmentStatus: employee.employment_status,
+      dateOfJoining: new Date(employee.date_of_joining),
     },
   });
 

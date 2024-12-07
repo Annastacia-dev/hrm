@@ -16,9 +16,10 @@ const useEmployees = () => {
       } else {
         setLoading(false);
         setError(response.data.detail);
+        console.error(error);
       }
     });
-  }, []);
+  }, [error]);
 
   return { employees, setEmployees, loading };
 };

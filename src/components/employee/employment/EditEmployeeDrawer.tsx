@@ -7,23 +7,23 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
-import { User } from '@/types/user';
+import { Employee } from '@/types/employee';
 
 type Props = {
-  user: User;
+  employee: Employee;
 };
 
-const EditEmployeeDrawer = ({ user }: Props) => {
+const EditEmployeeDrawer = ({ employee }: Props) => {
   return (
     <div className="mx-auto w-full max-w-5xl">
       <DrawerHeader>
         <DrawerTitle>
-          Edit {user.first_name} {user.last_name} Details
+          Edit {employee.first_name} {employee.last_name} Details
         </DrawerTitle>
       </DrawerHeader>
       <div className="p-4 pb-0">
         <div className="flex items-center justify-center space-x-2">
-          <EditEmployeeForm user={user} />
+          <EditEmployeeForm employee={employee} />
         </div>
       </div>
       <DrawerFooter>
