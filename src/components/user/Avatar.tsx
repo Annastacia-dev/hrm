@@ -26,8 +26,8 @@ const AvatarDetails = () => {
               className="object-cover"
             />
             <AvatarFallback>
-              {currentUser?.first_name[0]}
-              {currentUser?.last_name[0]}
+              {currentUser?.first_name[0].toUpperCase()}
+              {currentUser?.last_name[0].toUpperCase()}
             </AvatarFallback>
           </Avatar>
         </Button>

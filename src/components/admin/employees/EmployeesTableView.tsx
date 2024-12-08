@@ -79,7 +79,7 @@ const EmployeesTableView = ({
                 </TableCell>
                 <TableCell className="capitalize">{employee.role}</TableCell>
                 <TableCell className="">
-                  <Badge className="text-white">
+                  <Badge className="text-white dark:text-black">
                     {employee.employment_status}
                   </Badge>
                 </TableCell>

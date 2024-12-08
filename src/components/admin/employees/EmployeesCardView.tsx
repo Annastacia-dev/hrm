@@ -99,7 +99,7 @@ const EmployeesCardView = ({
                 <Badge variant="outline" className="mr-2">
                   {employee.role}
                 </Badge>
-                <Badge className="text-white">
+                <Badge className="text-white dark:text-black">
                   {employee.employment_status}
                 </Badge>
               </div>

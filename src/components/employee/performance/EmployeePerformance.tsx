@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Progress } from '@/components/ui/progress';
 import {
   Card,
@@ -21,8 +21,10 @@ import {
   Target,
   TrendingUp,
 } from 'lucide-react';
+import UserContext from '@/contexts/user';
 
 export default function PerformanceDashboard() {
+  const { currentUser } = useContext(UserContext);
   const [feedback, setFeedback] = useState('');
 
   return (
@@ -37,7 +39,10 @@ export default function PerformanceDashboard() {
             src="/placeholder.svg?height=40&width=40"
             alt="Employee"
           />
-          <AvatarFallback>JD</AvatarFallback>
+           <AvatarFallback>
+              {currentUser?.first_name[0].toUpperCase()}
+              {currentUser?.last_name[0].toUpperCase()}
+            </AvatarFallback>
         </Avatar>
       </header>
 

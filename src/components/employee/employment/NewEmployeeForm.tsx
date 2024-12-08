@@ -29,8 +29,12 @@ import {
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { CalendarIcon } from 'lucide-react';
+import api from '@/utils/api';
+import useDepartments from '@/data/departments';
+import { useState } from 'react';
 
 const FormSchema = z.object({
+  profilePicture: z.string().optional(),
   firstName: z.string().min(2, {
     message: 'firstName must be at least 2 characters.',
   }),
@@ -40,7 +44,7 @@ const FormSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string(),
   address: z.string(),
-  role: z.string(),
+  department: z.string(),
   employmentStatus: z.string(),
   dateOfJoining: z.date(),
   dateOfBirth: z.date(),
@@ -50,6 +54,7 @@ const NewEmployeeForm = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      profilePicture: '',
       firstName: '',
       middleName: '',
       lastName: '',
@@ -57,29 +62,121 @@ const NewEmployeeForm = () => {
       email: '',
       phoneNumber: '',
       address: '',
-      role: '',
+      department: '',
       employmentStatus: '',
       dateOfJoining: new Date(),
       dateOfBirth: new Date(),
     },
   });
 
-  // TODO: Add API call to submit data
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast({
-      title: 'You submitted the following values:',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+  const { departments } = useDepartments();
+
+  console.log(departments);
+
+  const [file, setFile] = useState<File | null>(null);
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    try {
+      const uploadedFileUrl = await handleUploadProfilePicture();
+      
+      await handleCreateEmployee({
+        ...data,
+        profilePicture: uploadedFileUrl || '',
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Something went wrong'
+      });
+    }
   }
+
+  const handleUploadProfilePicture = async () => {
+    if (!file) return null;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const response = await api.post('/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    if (response.status === 200) {
+      toast({ title: 'Profile picture uploaded successfully' });
+      return response.data.url;
+    } else {
+      toast({ title: 'Profile picture upload failed' });
+      return null;
+    }
+  };
+
+  const handleCreateEmployee = async (data: z.infer<typeof FormSchema>) => {
+    // Helper function to strip time from date
+    const stripTime = (date: Date) => {
+      return new Date(date.toISOString().split('T')[0]);
+    };
+
+    api.post('/employees', {
+      id_number: data.idNumber,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      email: data.email,
+      phone: data.phoneNumber,
+      address: data.address,
+      department_id: data.department,
+      employment_status: data.employmentStatus,
+      date_of_joining: stripTime(data.dateOfJoining),
+      date_of_birth: stripTime(data.dateOfBirth),
+      job_role: 'employee',
+      profile_picture: data.profilePicture,
+      gross_salary: 50000,
+      salary_start_date: stripTime(data.dateOfJoining),
+      salary_end_date: stripTime(data.dateOfJoining),
+    }).then((response) => {
+      if (response.status === 200) {
+        toast({
+          title: 'Employee created successfully',
+        });
+      } else {
+        toast({
+          title: 'Employee creation failed',
+        });
+      }
+    });
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
+          <FormField
+            control={form.control}
+            name="profilePicture"
+            render={({ field: { onChange, ...field } }) => (
+              <FormItem>
+                <FormLabel>Profile Picture</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="file" 
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setFile(file);
+                        onChange(file.name);
+                      }
+                    }}
+                    {...field}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="firstName"
@@ -180,19 +277,24 @@ const NewEmployeeForm = () => {
 
           <FormField
             control={form.control}
-            name="role"
+            name="department"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
+                <FormLabel>Department</FormLabel>
                 <FormControl>
-                  <Select required {...field}>
+                  <Select 
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Role" />
+                      <SelectValue placeholder="Select Department" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="employee">Employee</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="finance">Finance</SelectItem>
+                      {departments.map((department) => (
+                        <SelectItem key={department.id} value={department.id.toString()}>
+                          {department.department_name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -207,7 +309,10 @@ const NewEmployeeForm = () => {
               <FormItem>
                 <FormLabel>Employment Status</FormLabel>
                 <FormControl>
-                  <Select required {...field}>
+                  <Select 
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select Employment Status" />
                     </SelectTrigger>

@@ -36,6 +36,7 @@ type Props = {
 };
 
 const FormSchema = z.object({
+  profilePicture: z.string().optional(),
   firstName: z.string().min(2, {
     message: 'firstName must be at least 2 characters.',
   }),
@@ -65,6 +66,7 @@ const EditEmployeeForm = ({ employee }: Props) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
+      profilePicture: employee.profile_picture,
       firstName: employee.first_name,
       middleName: employee.middle_name,
       lastName: employee.last_name,
@@ -91,6 +93,20 @@ const EditEmployeeForm = ({ employee }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
+
+          <FormField
+            control={form.control}
+            name="profilePicture"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Profile Picture</FormLabel>
+                <FormControl>
+                  <Input type="file" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="firstName"
