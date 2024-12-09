@@ -5,6 +5,7 @@ import { PersonalDocuments } from './personal-documents';
 import { Attendance } from './attendance';
 
 export type Employee = {
+  id: string;
   first_name: string;
   middle_name: string;
   last_name: string;

@@ -24,7 +24,9 @@ import type { Employee } from '@/types/employee';
 const Employee = () => {
   const { id } = useParams();
   const { employees } = useEmployees();
-  const employee = employees.find((employee: Employee) => employee.id_number === id);
+  const employee = employees.find(
+    (employee: Employee) => employee.id_number === id
+  );
 
   if (!employee) {
     return <Error />;
@@ -158,9 +160,7 @@ const Employee = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <Phone className="w-4 h-4" />
-                      <p className="text-sm text-gray-500">
-                        {employee.phone}
-                      </p>
+                      <p className="text-sm text-gray-500">{employee.phone}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />

@@ -44,6 +44,7 @@ const FormSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string(),
   address: z.string(),
+  jobTitle: z.string(),
   department: z.string(),
   employmentStatus: z.string(),
   dateOfJoining: z.date(),
@@ -62,6 +63,7 @@ const NewEmployeeForm = () => {
       email: '',
       phoneNumber: '',
       address: '',
+      jobTitle: '',
       department: '',
       employmentStatus: '',
       dateOfJoining: new Date(),
@@ -70,8 +72,6 @@ const NewEmployeeForm = () => {
   });
 
   const { departments } = useDepartments();
-
-  console.log(departments);
 
   const [file, setFile] = useState<File | null>(null);
 
@@ -127,11 +127,12 @@ const NewEmployeeForm = () => {
       email: data.email,
       phone: data.phoneNumber,
       address: data.address,
+      job_role: data.jobTitle,
       department_id: data.department,
       employment_status: data.employmentStatus,
       date_of_joining: stripTime(data.dateOfJoining),
       date_of_birth: stripTime(data.dateOfBirth),
-      job_role: 'employee',
+      role: 'Employee',
       profile_picture: data.profilePicture,
       gross_salary: 50000,
       salary_start_date: stripTime(data.dateOfJoining),
@@ -302,6 +303,20 @@ const NewEmployeeForm = () => {
             )}
           />
 
+<FormField
+            control={form.control}
+            name="jobTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Software Engineer" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="employmentStatus"
@@ -320,6 +335,7 @@ const NewEmployeeForm = () => {
                       <SelectItem value="full-time">Full Time</SelectItem>
                       <SelectItem value="part-time">Part Time</SelectItem>
                       <SelectItem value="contract">Contract</SelectItem>
+                      <SelectItem value="intern">Intern</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>

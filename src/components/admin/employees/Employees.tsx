@@ -105,12 +105,15 @@ export default function EmployeesComponent() {
   // const activeEmployees = filteredEmployees.filter(
   //   (employee) => employee.active
   // );
-  
+
   const inactiveEmployees = filteredEmployees.filter(
     (employee) => !employee.active
   );
 
-  if (currentUser?.role?.toLowerCase() !== 'admin' && currentUser?.role?.toLowerCase() !== 'hr manager') {
+  if (
+    currentUser?.role?.toLowerCase() !== 'admin' &&
+    currentUser?.role?.toLowerCase() !== 'hr manager'
+  ) {
     return null;
   }
 

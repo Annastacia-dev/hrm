@@ -30,6 +30,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { cn } from '@/lib/utils';
+import api from '@/utils/api';
+import useDepartments from '@/data/departments';
+import { useState } from 'react';
+import { Label } from '@/components/ui/label';
 
 type Props = {
   employee: Employee;
@@ -49,6 +53,8 @@ const FormSchema = z.object({
   idNumber: z.string().min(8, {
     message: 'ID Number must be at least 8 characters.',
   }),
+  department: z.string(),
+  jobTitle: z.string(),
   email: z.string().email({
     message: 'Please enter a valid email address.',
   }),
@@ -63,6 +69,7 @@ const FormSchema = z.object({
 });
 
 const EditEmployeeForm = ({ employee }: Props) => {
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -71,6 +78,8 @@ const EditEmployeeForm = ({ employee }: Props) => {
       middleName: employee.middle_name,
       lastName: employee.last_name,
       idNumber: employee.id_number,
+      department: employee.department_name,
+      jobTitle: employee.job_role,
       email: employee.email,
       phoneNumber: employee.phone,
       dateOfBirth: new Date(employee.date_of_birth),
@@ -81,13 +90,31 @@ const EditEmployeeForm = ({ employee }: Props) => {
     },
   });
 
-  // TODO: API call to update employee
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    toast({
-      title: `Updating ${data.firstName} ${data.middleName} ${data.lastName}`,
-      description: `Please wait while we update ${data.firstName} ${data.middleName} ${data.lastName}`,
+    api.put(`/employees/${employee.id}`, {
+      first_name: data.firstName,
+      middle_name: data.middleName,
+      last_name: data.lastName,
+      id_number: data.idNumber,
+      email: data.email,
+      phone: data.phoneNumber,
+      address: data.address,
+      role: data.role,
+      employment_status: data.employmentStatus,
+      date_of_joining: data.dateOfJoining,
+      date_of_birth: data.dateOfBirth,
+      department_id: data.department,
+      job_role: data.jobTitle,
+    }).then((response) => {
+      if (response.status === 200) {
+        toast({ title: 'Employee updated successfully' });
+      } else {
+        toast({ title: 'Employee update failed' });
+      }
     });
   };
+
+  const { departments } = useDepartments();
 
   return (
     <Form {...form}>
@@ -207,19 +234,37 @@ const EditEmployeeForm = ({ employee }: Props) => {
 
           <FormField
             control={form.control}
-            name="role"
+            name="jobTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input required placeholder="Software Engineer" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="department"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Department</FormLabel>
                 <FormControl>
                   <Select required {...field}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Role" />
+                      <SelectValue placeholder="Select Department" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="employee">Employee</SelectItem>
-                      <SelectItem value="manager">Manager</SelectItem>
-                      <SelectItem value="finance">Finance</SelectItem>
+                      {
+                        departments.map((department) => (
+                          <SelectItem key={department.id} value={department.department_name}>
+                            {department.department_name}
+                          </SelectItem>
+                        ))
+                      }
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -235,7 +280,10 @@ const EditEmployeeForm = ({ employee }: Props) => {
               <FormItem>
                 <FormLabel>Employment Status</FormLabel>
                 <FormControl>
-                  <Select required {...field}>
+                  <Select 
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select Employment Status" />
                     </SelectTrigger>
@@ -243,6 +291,7 @@ const EditEmployeeForm = ({ employee }: Props) => {
                       <SelectItem value="full-time">Full Time</SelectItem>
                       <SelectItem value="part-time">Part Time</SelectItem>
                       <SelectItem value="contract">Contract</SelectItem>
+                      <SelectItem value="intern">Intern</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
