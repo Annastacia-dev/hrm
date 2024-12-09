@@ -22,7 +22,7 @@ const EditEmployeeDrawer = ({ employee }: Props) => {
         </DrawerTitle>
       </DrawerHeader>
       <div className="p-4 pb-0">
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex items-center justify-center">
           <EditEmployeeForm employee={employee} />
         </div>
       </div>

@@ -44,6 +44,7 @@ const FormSchema = z.object({
   email: z.string().email(),
   phoneNumber: z.string(),
   address: z.string(),
+  jobTitle: z.string(),
   department: z.string(),
   employmentStatus: z.string(),
   dateOfJoining: z.date(),
@@ -62,6 +63,7 @@ const NewEmployeeForm = () => {
       email: '',
       phoneNumber: '',
       address: '',
+      jobTitle: '',
       department: '',
       employmentStatus: '',
       dateOfJoining: new Date(),
@@ -71,14 +73,12 @@ const NewEmployeeForm = () => {
 
   const { departments } = useDepartments();
 
-  console.log(departments);
-
   const [file, setFile] = useState<File | null>(null);
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     try {
       const uploadedFileUrl = await handleUploadProfilePicture();
-      
+
       await handleCreateEmployee({
         ...data,
         profilePicture: uploadedFileUrl || '',
@@ -88,14 +88,14 @@ const NewEmployeeForm = () => {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Something went wrong'
+        description: 'Something went wrong',
       });
     }
   }
 
   const handleUploadProfilePicture = async () => {
     if (!file) return null;
-    
+
     const formData = new FormData();
     formData.append('file', file);
 
@@ -104,7 +104,7 @@ const NewEmployeeForm = () => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     if (response.status === 200) {
       toast({ title: 'Profile picture uploaded successfully' });
       return response.data.url;
@@ -120,33 +120,36 @@ const NewEmployeeForm = () => {
       return new Date(date.toISOString().split('T')[0]);
     };
 
-    api.post('/employees', {
-      id_number: data.idNumber,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      email: data.email,
-      phone: data.phoneNumber,
-      address: data.address,
-      department_id: data.department,
-      employment_status: data.employmentStatus,
-      date_of_joining: stripTime(data.dateOfJoining),
-      date_of_birth: stripTime(data.dateOfBirth),
-      job_role: 'employee',
-      profile_picture: data.profilePicture,
-      gross_salary: 50000,
-      salary_start_date: stripTime(data.dateOfJoining),
-      salary_end_date: stripTime(data.dateOfJoining),
-    }).then((response) => {
-      if (response.status === 200) {
-        toast({
-          title: 'Employee created successfully',
-        });
-      } else {
-        toast({
-          title: 'Employee creation failed',
-        });
-      }
-    });
+    api
+      .post('/employees', {
+        id_number: data.idNumber,
+        first_name: data.firstName,
+        last_name: data.lastName,
+        email: data.email,
+        phone: data.phoneNumber,
+        address: data.address,
+        job_role: data.jobTitle,
+        department_id: data.department,
+        employment_status: data.employmentStatus,
+        date_of_joining: stripTime(data.dateOfJoining),
+        date_of_birth: stripTime(data.dateOfBirth),
+        role: 'Employee',
+        profile_picture: data.profilePicture,
+        gross_salary: 50000,
+        salary_start_date: stripTime(data.dateOfJoining),
+        salary_end_date: stripTime(data.dateOfJoining),
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          toast({
+            title: 'Employee created successfully',
+          });
+        } else {
+          toast({
+            title: 'Employee creation failed',
+          });
+        }
+      });
   };
 
   return (
@@ -160,8 +163,8 @@ const NewEmployeeForm = () => {
               <FormItem>
                 <FormLabel>Profile Picture</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="file" 
+                  <Input
+                    type="file"
                     accept="image/*"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
@@ -282,7 +285,7 @@ const NewEmployeeForm = () => {
               <FormItem>
                 <FormLabel>Department</FormLabel>
                 <FormControl>
-                  <Select 
+                  <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -291,7 +294,10 @@ const NewEmployeeForm = () => {
                     </SelectTrigger>
                     <SelectContent>
                       {departments.map((department) => (
-                        <SelectItem key={department.id} value={department.id.toString()}>
+                        <SelectItem
+                          key={department.id}
+                          value={department.id.toString()}
+                        >
                           {department.department_name}
                         </SelectItem>
                       ))}
@@ -304,12 +310,26 @@ const NewEmployeeForm = () => {
 
           <FormField
             control={form.control}
+            name="jobTitle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Title</FormLabel>
+                <FormControl>
+                  <Input placeholder="Software Engineer" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="employmentStatus"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Employment Status</FormLabel>
                 <FormControl>
-                  <Select 
+                  <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -320,6 +340,7 @@ const NewEmployeeForm = () => {
                       <SelectItem value="full-time">Full Time</SelectItem>
                       <SelectItem value="part-time">Part Time</SelectItem>
                       <SelectItem value="contract">Contract</SelectItem>
+                      <SelectItem value="intern">Intern</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormControl>
