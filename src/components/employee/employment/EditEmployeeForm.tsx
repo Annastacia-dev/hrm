@@ -32,8 +32,6 @@ import { z } from 'zod';
 import { cn } from '@/lib/utils';
 import api from '@/utils/api';
 import useDepartments from '@/data/departments';
-import { useState } from 'react';
-import { Label } from '@/components/ui/label';
 
 type Props = {
   employee: Employee;
@@ -69,7 +67,6 @@ const FormSchema = z.object({
 });
 
 const EditEmployeeForm = ({ employee }: Props) => {
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -91,27 +88,29 @@ const EditEmployeeForm = ({ employee }: Props) => {
   });
 
   const onSubmit = (data: z.infer<typeof FormSchema>) => {
-    api.put(`/employees/${employee.id}`, {
-      first_name: data.firstName,
-      middle_name: data.middleName,
-      last_name: data.lastName,
-      id_number: data.idNumber,
-      email: data.email,
-      phone: data.phoneNumber,
-      address: data.address,
-      role: data.role,
-      employment_status: data.employmentStatus,
-      date_of_joining: data.dateOfJoining,
-      date_of_birth: data.dateOfBirth,
-      department_id: data.department,
-      job_role: data.jobTitle,
-    }).then((response) => {
-      if (response.status === 200) {
-        toast({ title: 'Employee updated successfully' });
-      } else {
-        toast({ title: 'Employee update failed' });
-      }
-    });
+    api
+      .put(`/employees/${employee.id}`, {
+        first_name: data.firstName,
+        middle_name: data.middleName,
+        last_name: data.lastName,
+        id_number: data.idNumber,
+        email: data.email,
+        phone: data.phoneNumber,
+        address: data.address,
+        role: data.role,
+        employment_status: data.employmentStatus,
+        date_of_joining: data.dateOfJoining,
+        date_of_birth: data.dateOfBirth,
+        department_id: data.department,
+        job_role: data.jobTitle,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          toast({ title: 'Employee updated successfully' });
+        } else {
+          toast({ title: 'Employee update failed' });
+        }
+      });
   };
 
   const { departments } = useDepartments();
@@ -120,7 +119,6 @@ const EditEmployeeForm = ({ employee }: Props) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
-
           <FormField
             control={form.control}
             name="profilePicture"
@@ -258,13 +256,14 @@ const EditEmployeeForm = ({ employee }: Props) => {
                       <SelectValue placeholder="Select Department" />
                     </SelectTrigger>
                     <SelectContent>
-                      {
-                        departments.map((department) => (
-                          <SelectItem key={department.id} value={department.department_name}>
-                            {department.department_name}
-                          </SelectItem>
-                        ))
-                      }
+                      {departments.map((department) => (
+                        <SelectItem
+                          key={department.id}
+                          value={department.department_name}
+                        >
+                          {department.department_name}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </FormControl>
@@ -280,10 +279,7 @@ const EditEmployeeForm = ({ employee }: Props) => {
               <FormItem>
                 <FormLabel>Employment Status</FormLabel>
                 <FormControl>
-                  <Select 
-                    value={field.value}
-                    onValueChange={field.onChange}
-                  >
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select Employment Status" />
                     </SelectTrigger>

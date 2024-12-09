@@ -39,10 +39,10 @@ export default function PerformanceDashboard() {
             src="/placeholder.svg?height=40&width=40"
             alt="Employee"
           />
-           <AvatarFallback>
-              {currentUser?.first_name[0].toUpperCase()}
-              {currentUser?.last_name[0].toUpperCase()}
-            </AvatarFallback>
+          <AvatarFallback>
+            {currentUser?.first_name[0].toUpperCase()}
+            {currentUser?.last_name[0].toUpperCase()}
+          </AvatarFallback>
         </Avatar>
       </header>
 
