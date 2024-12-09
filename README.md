@@ -1,5 +1,35 @@
 # Zuri Health HRM System (Web Version)
 
+## Live Links
+- [Figma Designs]()
+- [Frontend](https://zuri-hrm.vercel.app)
+- [Swagger API Docs](https://zuriapi.crepant.com)
+
+## Team
+- [Frank Omondi](https://github.com/Dofften)
+- [Annastacia Mumbua](https://github.com/Annastacia-dev)
+
+## Tech Stack
+- [React](https://react.dev)
+- [Typescript](https://www.typescriptlang.org/download)
+- [TailwindCSS](https://tailwindcss.com)
+- [Shadcn/UI](https://ui.shadcn.com)
+- [Lucide Icons](https://lucide.dev)
+- [Vite](https://vitejs.dev)
+
+## Project Overview
+
+This project is a Human Resource Management System (HRMS) designed to streamline and automate HR processes for Zuri Health.
+It provides dashboards for admins, employees and HR managers.
+It provides a comprehensive set of features:
+
+- Employee Management
+- Leave Management
+- Payroll Management
+- Performance Management
+- Attendance Management
+- Training Management
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download) (v18.15.0)+
